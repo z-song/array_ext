@@ -70,7 +70,7 @@ ZEND_END_ARG_INFO()
 /* {{{ array_ext_functions[]
  */
 const zend_function_entry array_ext_functions[] = {
-	PHP_FE(array_split,			arginfo_array_split)
+	PHP_FE(array_split,		arginfo_array_split)
 	PHP_FE(array_column,		arginfo_array_column)
 	PHP_FE(array_keys_filter,	arginfo_array_keys_filter)
 	PHP_FE(array_delete,		arginfo_array_delete)
