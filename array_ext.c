@@ -12,7 +12,7 @@
   | obtain it through the world-wide-web, please send a note to          |
   | license@php.net so we can mail you a copy immediately.               |
   +----------------------------------------------------------------------+
-  | Author: zosong                                                       |
+  | Author: merlinal                                                     |
   +----------------------------------------------------------------------+
 */
 
@@ -25,14 +25,14 @@
 #include "php.h"
 #include "php_ini.h"
 #include "ext/standard/info.h"
-#include "php_song.h"
+#include "php_array_ext.h"
 
-/* If you declare any globals in php_song.h uncomment this:
-ZEND_DECLARE_MODULE_GLOBALS(song)
+/* If you declare any globals in php_array_ext.h uncomment this:
+ZEND_DECLARE_MODULE_GLOBALS(array_ext)
 */
 
 /* True global resources - no need for thread safety here */
-static int le_song;
+static int le_array_ext;
 
 /* {{{ arginfo */
 ZEND_BEGIN_ARG_INFO_EX(arginfo_array_split, 0, 0, 2)
@@ -67,9 +67,9 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_array_update, 0, 0, 1)
 ZEND_END_ARG_INFO()
 /* }}} */
 
-/* {{{ song_functions[]
+/* {{{ array_ext_functions[]
  */
-const zend_function_entry song_functions[] = {
+const zend_function_entry array_ext_functions[] = {
 	PHP_FE(array_split,			arginfo_array_split)
 	PHP_FE(array_column,		arginfo_array_column)
 	PHP_FE(array_keys_filter,	arginfo_array_keys_filter)
@@ -82,19 +82,19 @@ const zend_function_entry song_functions[] = {
 };
 /* }}} */
 
-/* {{{ song_module_entry
+/* {{{ array_ext_module_entry
  */
-zend_module_entry song_module_entry = {
+zend_module_entry array_ext_module_entry = {
 #if ZEND_MODULE_API_NO >= 20010901
 	STANDARD_MODULE_HEADER,
 #endif
-	"song",
-	song_functions,
-	PHP_MINIT(song),
-	PHP_MSHUTDOWN(song),
-	PHP_RINIT(song),		/* Replace with NULL if there's nothing to do at request start */
-	PHP_RSHUTDOWN(song),	/* Replace with NULL if there's nothing to do at request end */
-	PHP_MINFO(song),
+	"array_ext",
+	array_ext_functions,
+	PHP_MINIT(array_ext),
+	PHP_MSHUTDOWN(array_ext),
+	PHP_RINIT(array_ext),		/* Replace with NULL if there's nothing to do at request start */
+	PHP_RSHUTDOWN(array_ext),	/* Replace with NULL if there's nothing to do at request end */
+	PHP_MINFO(array_ext),
 #if ZEND_MODULE_API_NO >= 20010901
 	"0.1", /* Replace with version number for your extension */
 #endif
@@ -102,34 +102,34 @@ zend_module_entry song_module_entry = {
 };
 /* }}} */
 
-#ifdef COMPILE_DL_SONG
-ZEND_GET_MODULE(song)
+#ifdef COMPILE_DL_ARRAY_EXT
+ZEND_GET_MODULE(array_ext)
 #endif
 
-PHP_MINIT_FUNCTION(song)
+PHP_MINIT_FUNCTION(array_ext)
 {
 	return SUCCESS;
 }
 
-PHP_MSHUTDOWN_FUNCTION(song)
+PHP_MSHUTDOWN_FUNCTION(array_ext)
 {
 	return SUCCESS;
 }
 
-PHP_RINIT_FUNCTION(song)
+PHP_RINIT_FUNCTION(array_ext)
 {
 	return SUCCESS;
 }
 
-PHP_RSHUTDOWN_FUNCTION(song)
+PHP_RSHUTDOWN_FUNCTION(array_ext)
 {
 	return SUCCESS;
 }
 
-PHP_MINFO_FUNCTION(song)
+PHP_MINFO_FUNCTION(array_ext)
 {
 	php_info_print_table_start();
-	php_info_print_table_header(2, "song support", "enabled");
+	php_info_print_table_header(2, "array_ext support", "enabled");
 	php_info_print_table_end();
 }
 

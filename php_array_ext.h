@@ -18,29 +18,29 @@
 
 /* $Id$ */
 
-#ifndef PHP_SONG_H
-#define PHP_SONG_H
+#ifndef PHP_ARRAY_EXT_H
+#define PHP_ARRAY_EXT_H
 
-extern zend_module_entry song_module_entry;
-#define phpext_song_ptr &song_module_entry
+extern zend_module_entry array_ext_module_entry;
+#define phpext_array_ext_ptr &song_module_entry
 
 #ifdef PHP_WIN32
-#	define PHP_SONG_API __declspec(dllexport)
+#	define PHP_ARRAY_EXT_API __declspec(dllexport)
 #elif defined(__GNUC__) && __GNUC__ >= 4
-#	define PHP_SONG_API __attribute__ ((visibility("default")))
+#	define PHP_ARRAY_EXT_API __attribute__ ((visibility("default")))
 #else
-#	define PHP_SONG_API
+#	define PHP_ARRAY_EXT_API
 #endif
 
 #ifdef ZTS
 #include "TSRM.h"
 #endif
 
-PHP_MINIT_FUNCTION(song);
-PHP_MSHUTDOWN_FUNCTION(song);
-PHP_RINIT_FUNCTION(song);
-PHP_RSHUTDOWN_FUNCTION(song);
-PHP_MINFO_FUNCTION(song);
+PHP_MINIT_FUNCTION(array_ext);
+PHP_MSHUTDOWN_FUNCTION(array_ext);
+PHP_RINIT_FUNCTION(array_ext);
+PHP_RSHUTDOWN_FUNCTION(array_ext);
+PHP_MINFO_FUNCTION(array_ext);
 
 PHP_FUNCTION(array_split);
 PHP_FUNCTION(array_column);
@@ -57,29 +57,29 @@ PHP_FUNCTION(ppi);
   	Declare any global variables you may need between the BEGIN
 	and END macros here:     
 
-ZEND_BEGIN_MODULE_GLOBALS(song)
+ZEND_BEGIN_MODULE_GLOBALS(array_ext)
 	long  global_value;
 	char *global_string;
-ZEND_END_MODULE_GLOBALS(song)
+ZEND_END_MODULE_GLOBALS(array_ext)
 */
 
 /* In every utility function you add that needs to use variables 
-   in php_song_globals, call TSRMLS_FETCH(); after declaring other 
+   in php_array_ext_globals, call TSRMLS_FETCH(); after declaring other 
    variables used by that function, or better yet, pass in TSRMLS_CC
    after the last function argument and declare your utility function
    with TSRMLS_DC after the last declared argument.  Always refer to
-   the globals in your function as SONG_G(variable).  You are 
+   the globals in your function as ARRAY_EXT_G(variable).  You are 
    encouraged to rename these macros something shorter, see
    examples in any other php module directory.
 */
 
 #ifdef ZTS
-#define SONG_G(v) TSRMG(song_globals_id, zend_song_globals *, v)
+#define ARRAY_EXT_G(v) TSRMG(array_ext_globals_id, zend_song_globals *, v)
 #else
-#define SONG_G(v) (song_globals.v)
+#define ARRAY_EXT_G(v) (array_ext_globals.v)
 #endif
 
-#endif	/* PHP_SONG_H */
+#endif	/* PHP_ARRAY_EXT_H */
 
 
 /*
