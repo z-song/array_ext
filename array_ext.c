@@ -77,7 +77,6 @@ const zend_function_entry array_ext_functions[] = {
 	PHP_FE(array_udelete,		arginfo_array_udelete)
 	PHP_FE(array_update,		arginfo_array_update)
 	
-	PHP_FE(ppi,NULL)
 	PHP_FE_END
 };
 /* }}} */
