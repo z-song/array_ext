@@ -65,17 +65,24 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_array_update, 0, 0, 1)
 	ZEND_ARG_INFO(0, arr1)
 	ZEND_ARG_INFO(0, arr2)
 ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_array_trim, 0, 0, 1)
+	ZEND_ARG_INFO(0, arr1)
+	ZEND_ARG_INFO(0, arr2)
+ZEND_END_ARG_INFO()
+
 /* }}} */
 
 /* {{{ array_ext_functions[]
  */
 const zend_function_entry array_ext_functions[] = {
-	PHP_FE(array_split,		arginfo_array_split)
+	PHP_FE(array_split,			arginfo_array_split)
 	PHP_FE(array_column,		arginfo_array_column)
 	PHP_FE(array_keys_filter,	arginfo_array_keys_filter)
 	PHP_FE(array_delete,		arginfo_array_delete)
 	PHP_FE(array_udelete,		arginfo_array_udelete)
 	PHP_FE(array_update,		arginfo_array_update)
+	PHP_FE(array_trim,			arginfo_array_trim)
 	
 	PHP_FE_END
 };
@@ -436,3 +443,51 @@ PHP_FUNCTION(array_column)
 	}
 }
 
+PHP_FUNCTION(array_trim)
+{
+	zval *haystack, *needle, **entry, res;
+	HashTable *arr_hash;
+	char *key = NULL, *pos;
+	uint key_len = 0;
+	ulong index;
+	int (*is_equal_func)(zval *, zval *, zval * TSRMLS_DC) = is_equal_function;
+	int pos_len;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "az|s", &haystack, &needle, &pos, &pos_len) == FAILURE) {
+		return;
+	}
+	
+	arr_hash = Z_ARRVAL_P(haystack);
+	if (ZEND_NUM_ARGS()<3 || *pos=='l'){
+		zend_hash_internal_pointer_reset(arr_hash);
+		if (zend_hash_get_current_data(arr_hash, (void **)&entry) == SUCCESS){
+			is_equal_func(&res, needle, *entry TSRMLS_CC);
+			if (Z_LVAL(res)) {
+				zend_hash_get_current_key_ex(arr_hash, &key, &key_len, &index, 0, NULL);
+				zend_hash_del_key_or_index(arr_hash, key, key_len, index, (key) ? HASH_DEL_KEY : HASH_DEL_INDEX);
+			}
+		}
+	}
+	
+	if (ZEND_NUM_ARGS()<3 || *pos=='r'){
+		zend_hash_internal_pointer_end(arr_hash);
+		if (zend_hash_get_current_data(arr_hash, (void **)&entry) == SUCCESS){
+			is_equal_func(&res, needle, *entry TSRMLS_CC);
+			if (Z_LVAL(res)) {
+				zend_hash_get_current_key_ex(arr_hash, &key, &key_len, &index, 0, NULL);
+				zend_hash_del_key_or_index(arr_hash, key, key_len, index, (key) ? HASH_DEL_KEY : HASH_DEL_INDEX);
+			}
+		}
+	}
+
+	RETURN_ZVAL(haystack, 1, 0);
+}
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * c-basic-offset: 4
+ * End:
+ * vim600: noet sw=4 ts=4 fdm=marker
+ * vim<600: noet sw=4 ts=4
+ */

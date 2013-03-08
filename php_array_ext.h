@@ -48,9 +48,7 @@ PHP_FUNCTION(array_keys_filter);
 PHP_FUNCTION(array_delete);
 PHP_FUNCTION(array_udelete);
 PHP_FUNCTION(array_update);
-
-
-PHP_FUNCTION(ppi);
+PHP_FUNCTION(array_trim);
 
 
 /* 
