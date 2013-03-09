@@ -1,10 +1,10 @@
 #array_ext
 一些php数组操作函数
-	*[array_split](##array_split)
-	*[array_column](##array_column)
-	*[array_trim](##array_trim)
-	*[array_columnkey](##array_columnkey)
-	*[array_delete](##array_delete)
+	* [array_split](##array_split)
+	* [array_column](##array_column)
+	* [array_trim](##array_trim)
+	* [array_columnkey](##array_columnkey)
+	* [array_delete](##array_delete)
 #Install
 ~~~
 phpize
