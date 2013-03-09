@@ -1,5 +1,10 @@
 #array_ext
 一些php数组操作函数
+	*[array_split](##array_split)
+	*[array_column](##array_column)
+	*[array_trim](##array_trim)
+	*[array_columnkey](##array_columnkey)
+	*[array_delete](##array_delete)
 #Install
 ~~~
 phpize
@@ -8,7 +13,7 @@ make && make install
 ~~~
 Then add
 ~~~
-extension="array_ext"
+extension="array_ext.so"
 ~~~
 to your php.ini
 #Usage
@@ -83,8 +88,6 @@ $arr=[
 	['name'=>'hello','age'=>13],
 	['name'=>'hello','age'=>14],
 	['name'=>'hello','age'=>15],
-	['name'=>'hello','age'=>16],
-	['name'=>'hello','age'=>17]
 ];
 $res=array_columnkey($arr,'age');
 print_r($res);
@@ -111,5 +114,17 @@ Array
             [name] => hello
             [age] => 15
         )
+*/
+~~~
+##array_delete
+~~~
+$res=array_delete(['apple', 'banana', 'pear', 'apple'], 'apple');
+print_r($res);
+/*outputs
+Array
+(
+    [1] => banana
+    [2] => pear
+)
 */
 ~~~
