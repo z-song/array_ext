@@ -9,7 +9,8 @@
    * [array_keys_filter](#array_keys_filter)
    * [array_update](#array_update)
 
-#Install
+
+# Installing/Configuring
 
 ~~~
 phpize
