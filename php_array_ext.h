@@ -49,6 +49,7 @@ PHP_FUNCTION(array_delete);
 PHP_FUNCTION(array_udelete);
 PHP_FUNCTION(array_update);
 PHP_FUNCTION(array_trim);
+PHP_FUNCTION(array_columnkey);
 
 
 /* 

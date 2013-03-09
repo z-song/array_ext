@@ -71,6 +71,11 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_array_trim, 0, 0, 1)
 	ZEND_ARG_INFO(0, arr2)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(arginfo_array_columnkey, 0, 0, 2)
+	ZEND_ARG_INFO(0, arr)
+	ZEND_ARG_INFO(0, column)
+ZEND_END_ARG_INFO()
+
 /* }}} */
 
 /* {{{ array_ext_functions[]
@@ -83,6 +88,7 @@ const zend_function_entry array_ext_functions[] = {
 	PHP_FE(array_udelete,		arginfo_array_udelete)
 	PHP_FE(array_update,		arginfo_array_update)
 	PHP_FE(array_trim,			arginfo_array_trim)
+	PHP_FE(array_columnkey,		arginfo_array_columnkey)
 	
 	PHP_FE_END
 };
@@ -179,7 +185,7 @@ PHP_FUNCTION(array_split)
 
 PHP_FUNCTION(array_delete)
 {
-	zval *array,*value, **entry ,result;
+	zval *array, *value, **entry ,result;
 	char	 *string_key;
 	uint	  string_key_len;
 	ulong	  num_key;
@@ -362,9 +368,9 @@ PHP_FUNCTION(array_update)
 	}
 }
 
-PHP_FUNCTION(array_column)
+zval * get_array_column(zval * zarray, zval *zoffset)
 {
-	zval *zarray, *zoffset, **data, **zvalue,**entry;
+	zval **data, **zvalue,**entry, *_return;
 	HashTable *arr_hash;
 	HashPosition pointer,pos;
 	long index = 0;
@@ -373,13 +379,6 @@ PHP_FUNCTION(array_column)
 	zend_bool columns = 0;
 	zval *piece = NULL;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "az", &zarray, &zoffset) == FAILURE) {
-		return;
-	}
-
-	arr_hash = Z_ARRVAL_P(zarray);
-	array_init(return_value);
-	
 	switch (Z_TYPE_P(zoffset)) {
 		case IS_NULL:
 			index = 0;
@@ -402,9 +401,12 @@ PHP_FUNCTION(array_column)
 			break;
 		default:
 			php_error_docref(NULL TSRMLS_CC, E_WARNING, "The key should be either a string or an integer");
-			RETURN_FALSE;
+			return _return;
 	}
 	
+	MAKE_STD_ZVAL(_return);
+	array_init(_return);
+	arr_hash = Z_ARRVAL_P(zarray);
 	zend_hash_internal_pointer_reset_ex(arr_hash, &pointer);
 	while (zend_hash_get_current_data_ex(arr_hash, (void **)&data, &pointer) == SUCCESS) {
 		if (Z_TYPE_PP(data) == IS_ARRAY) {
@@ -426,7 +428,7 @@ PHP_FUNCTION(array_column)
 					zend_hash_move_forward_ex(Z_ARRVAL_P(zoffset), &pos);
 				}
 				
-				add_next_index_zval(return_value, piece);
+				add_next_index_zval(_return, piece);
 				piece = NULL;
 			}else{
 				if (key && zend_hash_find(Z_ARRVAL_PP(data), key, key_len + 1, (void**)&zvalue) == FAILURE) {
@@ -436,11 +438,22 @@ PHP_FUNCTION(array_column)
 				}
 
 				Z_ADDREF_PP(zvalue);
-				add_next_index_zval(return_value, *zvalue);
+				add_next_index_zval(_return, *zvalue);
 			}
 		}
 		zend_hash_move_forward_ex(arr_hash, &pointer);
 	}
+	return _return;
+}
+
+PHP_FUNCTION(array_column)
+{
+	zval *zarray, *zoffset, *keys;
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "az", &zarray, &zoffset) == FAILURE) {
+		return;
+	}
+	keys=get_array_column(zarray, zoffset);
+	RETURN_ZVAL(keys, 1, 0);
 }
 
 PHP_FUNCTION(array_trim)
@@ -482,6 +495,58 @@ PHP_FUNCTION(array_trim)
 
 	RETURN_ZVAL(haystack, 1, 0);
 }
+
+
+PHP_FUNCTION(array_columnkey)
+{
+	zval *input, *keys, **entry_keys, **entry_values, *column;
+	int column_len, num_keys;
+	HashTable *value_hash, *keys_hash;
+	HashPosition pos_keys, pos_values;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "az", &input, &column) == FAILURE) {
+		return;
+	}
+
+	keys=get_array_column(input, column);
+	num_keys=zend_hash_num_elements(Z_ARRVAL_P(keys));
+	array_init_size(return_value, num_keys);
+
+	value_hash = Z_ARRVAL_P(input);
+	keys_hash = Z_ARRVAL_P(keys);
+	
+	zend_hash_internal_pointer_reset_ex(keys_hash, &pos_keys);
+	zend_hash_internal_pointer_reset_ex(value_hash, &pos_values);
+	while (zend_hash_get_current_data_ex(keys_hash, (void **)&entry_keys, &pos_keys) == SUCCESS &&
+		zend_hash_get_current_data_ex(value_hash, (void **)&entry_values, &pos_values) == SUCCESS
+	) {
+		if (Z_TYPE_PP(entry_keys) == IS_LONG) {
+			zval_add_ref(entry_values);
+			add_index_zval(return_value, Z_LVAL_PP(entry_keys), *entry_values);
+		} else {
+			zval key, *key_ptr = *entry_keys;
+
+			if (Z_TYPE_PP(entry_keys) != IS_STRING) {
+				key = **entry_keys;
+				zval_copy_ctor(&key);
+				convert_to_string(&key);
+				key_ptr = &key;
+			}
+
+			zval_add_ref(entry_values);
+			add_assoc_zval_ex(return_value, Z_STRVAL_P(key_ptr), Z_STRLEN_P(key_ptr) + 1, *entry_values);
+
+			if (key_ptr != *entry_keys) {
+				zval_dtor(&key);
+			}
+		}
+
+		zend_hash_move_forward_ex(keys_hash, &pos_keys);
+		zend_hash_move_forward_ex(value_hash, &pos_values);
+	}
+}
+
+
 
 /*
  * Local variables:
