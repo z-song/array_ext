@@ -1,11 +1,13 @@
 #array_ext
 一些php数组操作函数
-	* [array_split](##array_split)
-	* [array_column](##array_column)
-	* [array_trim](##array_trim)
-	* [array_columnkey](##array_columnkey)
-	* [array_delete](##array_delete)
+   * [array_split](#array_split)
+   * [array_column](#array_column)
+   * [array_trim](#array_trim)
+   * [array_columnkey](#array_columnkey)
+   * [array_delete](#array_delete)
+
 #Install
+
 ~~~
 phpize
 ./configure --with-php-config=/usr/local/php/bin/php-config
@@ -16,13 +18,15 @@ Then add
 extension="array_ext.so"
 ~~~
 to your php.ini
+
 #Usage
-##array_split
+
+###array_split()
 ~~~
 $arr=[1,3,4,5,6,34,67];
 $res=array_split($arr, 3);
 print_r($res);
-/*outputs
+/*outputs:
 Array
 (
     [0] => Array
@@ -44,7 +48,8 @@ Array
 )
 */
 ~~~
-##array_column
+
+###array_column()
 ~~~
 $arr=[
 	['name'=>'bar','age'=>34],
@@ -54,7 +59,7 @@ $arr=[
 ];
 $res=array_column($arr, 'age');
 print_r($res);
-/*outputs
+/*outputs:
 Array
 (
     [0] => 34
@@ -64,11 +69,12 @@ Array
 )
 */
 ~~~
-##array_trim
+
+###array_trim()
 ~~~
 $res=array_trim([[3,5],3,5,7,5,6,7,8,[3,5]],[3,5]);
 print_r($res);
-/*outputs
+/*outputs:
 Array
 (
     [1] => 3
@@ -81,7 +87,8 @@ Array
 )
 */
 ~~~
-##array_columnkey
+
+###array_columnkey()
 ~~~
 $arr=[
 	['name'=>'hello','age'=>12],
@@ -91,7 +98,7 @@ $arr=[
 ];
 $res=array_columnkey($arr,'age');
 print_r($res);
-/*outputs
+/*outputs:
 Array
 (
     [12] => Array
@@ -116,11 +123,12 @@ Array
         )
 */
 ~~~
-##array_delete
+
+###array_delete()
 ~~~
 $res=array_delete(['apple', 'banana', 'pear', 'apple'], 'apple');
 print_r($res);
-/*outputs
+/*outputs:
 Array
 (
     [1] => banana
