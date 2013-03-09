@@ -5,6 +5,9 @@
    * [array_trim](#array_trim)
    * [array_columnkey](#array_columnkey)
    * [array_delete](#array_delete)
+   * [array_udelete](#array_udelete)
+   * [array_keys_filter](#array_keys_filter)
+   * [array_update](#array_update)
 
 #Install
 
