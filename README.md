@@ -26,7 +26,7 @@ to your php.ini
 #Usage
 
 ###array_split()
-~~~
+~~~php
 $arr=[1,3,4,5,6,34,67];
 $res=array_split($arr, 3);
 print_r($res);
@@ -54,7 +54,7 @@ Array
 ~~~
 
 ###array_column()
-~~~
+~~~php
 $arr=[
 	['name'=>'bar','age'=>34],
 	['name'=>'foo','age'=>17],
@@ -75,7 +75,7 @@ Array
 ~~~
 
 ###array_trim()
-~~~
+~~~php
 $res=array_trim([[3,5],3,5,7,5,6,7,8,[3,5]],[3,5]);
 print_r($res);
 /*outputs:
@@ -93,7 +93,7 @@ Array
 ~~~
 
 ###array_columnkey()
-~~~
+~~~php
 $arr=[
 	['name'=>'hello','age'=>12],
 	['name'=>'hello','age'=>13],
@@ -129,7 +129,7 @@ Array
 ~~~
 
 ###array_delete()
-~~~
+~~~php
 $res=array_delete(['apple', 'banana', 'pear', 'apple'], 'apple');
 print_r($res);
 /*outputs:
