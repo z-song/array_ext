@@ -12,13 +12,13 @@
 
 # Installing/Configuring
 
-~~~
+~~~bash
 phpize
 ./configure --with-php-config=/usr/local/php/bin/php-config
 make && make install
 ~~~
 Then add
-~~~
+~~~ini
 extension="array_ext.so"
 ~~~
 to your php.ini
