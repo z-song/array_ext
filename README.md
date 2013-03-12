@@ -171,8 +171,7 @@ Array
 */
 ```
 
-###
-array_update()
+###array_update()
 ```php
 $arr=['name'=>'bar', 'age'=>23, 'grade'=>4, 'money'=>1234, 'sex'=>true];
 $res=array_update($arr, ['age'=>15, 'money'=>100, 'sex'=>false]);
