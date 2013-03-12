@@ -311,14 +311,14 @@ PHP_FUNCTION(array_keys_filter)
 			index = Z_LVAL_PP(keys_item);
 			if(zend_hash_index_find(Z_ARRVAL_P(array), index, (void**)&zvalue)==SUCCESS){
 				Z_ADDREF_PP(zvalue);
-				add_next_index_zval(return_value, *zvalue);
+				add_index_zval(return_value, index, *zvalue);
 			}
 		}else if(Z_TYPE_PP(keys_item)==IS_STRING){
 			key=Z_STRVAL_PP(keys_item);
 			key_len=Z_STRLEN_PP(keys_item);
 			if(zend_hash_find(Z_ARRVAL_P(array), key, key_len + 1, (void**)&zvalue) == SUCCESS){
 				Z_ADDREF_PP(zvalue);
-				add_next_index_zval(return_value, *zvalue);
+				add_assoc_zval_ex(return_value, key, key_len + 1, *zvalue);
 			}
 		}
 		zend_hash_move_forward_ex(keys_hash, &keys_pointer);
@@ -545,8 +545,6 @@ PHP_FUNCTION(array_columnkey)
 		zend_hash_move_forward_ex(value_hash, &pos_values);
 	}
 }
-
-
 
 /*
  * Local variables:
