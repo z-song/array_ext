@@ -12,21 +12,21 @@
 
 # Installing/Configuring
 
-~~~
+```
 phpize
 ./configure --with-php-config=/usr/local/php/bin/php-config
 make && make install
-~~~
+```
 Then add
-~~~
+```
 extension="array_ext.so"
-~~~
+```
 to your php.ini
 
 #Usage
 
 ###array_split()
-~~~
+```php
 $arr=[1,3,4,5,6,34,67];
 $res=array_split($arr, 3);
 print_r($res);
@@ -51,10 +51,10 @@ Array
         )
 )
 */
-~~~
+```
 
 ###array_column()
-~~~
+```php
 $arr=[
 	['name'=>'bar','age'=>34],
 	['name'=>'foo','age'=>17],
@@ -72,10 +72,10 @@ Array
     [3] => 23
 )
 */
-~~~
+```
 
 ###array_trim()
-~~~
+```php
 $res=array_trim([[3,5],3,5,7,5,6,7,8,[3,5]],[3,5]);
 print_r($res);
 /*outputs:
@@ -90,10 +90,10 @@ Array
     [7] => 8
 )
 */
-~~~
+```
 
 ###array_columnkey()
-~~~
+```php
 $arr=[
 	['name'=>'hello','age'=>12],
 	['name'=>'hello','age'=>13],
@@ -126,10 +126,10 @@ Array
             [age] => 15
         )
 */
-~~~
+```
 
 ###array_delete()
-~~~
+```php
 $res=array_delete(['apple', 'banana', 'pear', 'apple'], 'apple');
 print_r($res);
 /*outputs:
@@ -139,4 +139,53 @@ Array
     [2] => pear
 )
 */
-~~~
+```
+
+###array_udelete()
+```php
+$res=array_udelete(['apple', 'banana', 'pear', 'apple'], function($val){
+		return $val=='banana';
+	});
+print_r($res);
+/*outputs:
+Array
+(
+    [0] => apple
+    [2] => pear
+    [3] => apple
+)
+*/
+```
+
+###array_keys_filter()
+```php
+$arr=['name'=>'bar', 'age'=>23, 'grade'=>4, 'money'=>1234, 'sex'=>true];
+$res=array_keys_filter($arr, ['age', 'money', 'sex']);
+print_r($res);
+/*outputs:
+Array
+(
+    [age] => 23
+    [money] => 1234
+    [sex] => 1
+)
+*/
+```
+
+###
+array_update()
+```php
+$arr=['name'=>'bar', 'age'=>23, 'grade'=>4, 'money'=>1234, 'sex'=>true];
+$res=array_update($arr, ['age'=>15, 'money'=>100, 'sex'=>false]);
+print_r($res);
+/*outputs:
+Array
+(
+    [name] => bar
+    [age] => 15
+    [grade] => 4
+    [money] => 100
+    [sex] => 
+)
+*/
+```
